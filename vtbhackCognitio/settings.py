@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os, sys
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(__file__)
@@ -27,14 +28,13 @@ SECRET_KEY = 'qx10r1_lgjoph2r3bqbg=e+ba=58cg87)!j%xc%7=)q-z=dylu'
 DEBUG = True
 
 
-
 ALLOWED_HOSTS = []
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'index.apps.IndexConfig',
+    'api.apps.ApiConfig',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
+    'index.apps.IndexConfig',
+    
 ]
 
 MIDDLEWARE = [
@@ -76,7 +79,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'vtbhackCognitio.wsgi.application'
 
-
+ASGI_APPLICATION = 'vtbhackCognitio.routing.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 

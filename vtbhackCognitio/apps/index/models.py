@@ -55,6 +55,7 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField('Text')
     date = models.DateTimeField('Publishment date')
+    
 
 class Result(models.Model):
     YES = 1

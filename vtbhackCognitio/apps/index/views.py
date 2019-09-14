@@ -3,12 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponse, Http404
 import json
-from .models import User, Document, Result
+from .models import User, Document, Result, Comment
 
 # Create your views here.
 def index(request):
     user = request.user
-    if (user.is_authenticated()):
+    if (request.user.is_authenticated):
         return redirect('/docs/')
     else:
         return redirect('/auth/')
@@ -31,7 +31,7 @@ def login(request):
 def docs(request):
     user = request.user
     documents = user.document_set.all()
-    return render(request, 'index/doc_list.html', ['documents':documents])
+    return render(request, 'index/doc_list.html', {'documents':documents})
 
 
 @login_required(login_url='/auth/')
@@ -50,7 +50,7 @@ def document(request, document_id):
             yes += 1
         elif (results.type == Result.NO):
             no += 1
-    return render(request, 'index/document.html', ['document': document, 'results':results, 'yes': yes, 'no': no, 'comments': comments])
+    return render(request, 'index/document.html', {'document': document, 'results':results, 'yes': yes, 'no': no, 'comments': comments})
 
 @login_required(login_url='/auth/')
 def logout(request):
@@ -75,5 +75,8 @@ def edit_doc(request, document_id):
             document = Document.objects.get(id = document_id)
         except:
             return Http404('Not found')
-        return render(request, 'index/create_doc.html', ['document':document])
+        return render(request, 'index/create_doc.html', {'document':document})
 
+def auth(request):
+    
+    return render(request, 'index/auth.html')
