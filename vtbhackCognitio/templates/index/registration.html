@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title%} Chat {% endblock %}
+{% block content %}
+	<div class="overlay"></div>
+	<div class="container-login">
+		<div class="wrap-login card">
+			<div class="card-body">
+				<form class="login-form">
+					<span class="login-form-title">
+						Регистрация
+					</span>
+					<div class="wrap-input  padding">
+						<span class="label-input"><b>Эл.почта</b></span>
+						<input class="input" type="text" name="Email" placeholder="Введите адрес электронной почты">
+						<span class="focus-input" data-symbol="&#xf200;"></span>
+					</div>
+					<div class="wrap-input  padding">
+						<span class="label-input"><b>ФИО</b></span>
+						<input class="input" type="text" name="fio" placeholder="Введите свои ФИО">
+						<span class="focus-input" data-symbol="&#xf205;"></span>
+					</div>
+					<div class="wrap-input  padding">
+						<span class="label-input"><b>Пароль</b></span>
+						<input class="input" type="password" name="password" placeholder="Введите пароль">
+						<span class="focus-input" data-symbol="&#xf191;"></span>
+					</div>			
+					<div class="container-login-form-btn padding">
+						<div class="wrap-login-form-btn">
+							<div class="login-form-bgbtn"></div>
+							<button class="login-form-btn">
+								зарегистрироваться
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

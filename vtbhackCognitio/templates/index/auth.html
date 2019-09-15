@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title%} Auth {% endblock %}
+{% block content %}
+	<div class="overlay"></div>
+	<div class="container-login">
+		<div class="wrap-login card">
+			<div class="card-body">
+				<form class="login-form">
+					<span class="login-form-title">
+						Авторизация
+					</span>
+					<div class="wrap-input  padding">
+						<span class="label-input"><b>Эл.почта или Логин</b></span>
+						<input class="input" type="text" name="Email" placeholder="Введите адрес электронной почты">
+						<span class="focus-input" data-symbol="&#xf206;"></span>
+					</div>
+					<div class="wrap-input  padding">
+						<span class="label-input"><b>Пароль</b></span>
+						<input class="input" type="password" name="password" placeholder="Введите пароль">
+						<span class="focus-input" data-symbol="&#xf190;"></span>
+					</div>
+					<div class="container-login-form-btn padding">
+						<div class="wrap-login-form-btn">
+							<div class="login-form-bgbtn"></div>
+							<button class="login-form-btn">
+								Войти
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

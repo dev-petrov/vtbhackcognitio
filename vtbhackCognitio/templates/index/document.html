@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title%} {% document.title %} {% endblock %}
+{% block content %}
+<main>
+	<div class="jumbotron">
+		<div class="container">
+			<h1>{% document.title %}</h1>
+		</div>
+	</div>
+	<div class="container">
+		<div class="tab-content" id="nav-tabContent">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-6 padding">
+						<li class="list-group-item">{% document.text %}</li>
+					</div>
+					<div class="col-lg-6 padding">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="list-group-item">
+									<div class="d-flex flex-row">
+										<div>
+
+											<p class="text-success">За: {% yes %}</p>
+										</div>
+										<div>
+											<p class="text-danger">Против: {% no %}</p>
+										</div>
+									</div>
+									<div class="list-group-item">
+										<button class="btn btn-success">За</button>
+										<button class="btn btn-danger">Против</button>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="list-group-item padding">
+									<div class="form-group">
+										<label>Чатик</label>
+										<div id="textarea" class="card">
+											<div class="container pt-1">
+												<div class="row">
+													<div class="col-3">
+														<div id="name">
+															Кирилл
+														</div>
+													</div>
+													<div class="col-5">
+														<div id="comment">
+															Гавно не тонет
+														</div>
+													</div>
+													<div class="col-4">
+														<div id="date">
+															14.06.2019
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="form-group input-group">
+												<input class="form-control" placeholder="Оставьте комментарий"
+													type="text" required>
+												<div class="input-group-append">
+													<button type="button" class="btn btn-sm btn-primary btn-block"><span
+															class="carousel-control-next-icon"
+															style="height:17px"></span></button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+{% endblock %}
