@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Document, Comment, User
+from .models import Document, Comment, User, Result
 
 class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,3 +15,9 @@ class CommentSerializer(serializers.Serializer):
     user = UserSerializer()
     text = serializers.CharField()
     date = serializers.DateTimeField()
+
+
+class ResultSerializer(serializers.Serializer):
+    user = UserSerializer()
+    result = serializers.IntegerField()
+    

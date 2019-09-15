@@ -4,6 +4,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponse, Http404
 import json
 from .models import User, Document, Result, Comment
+from .serializers import ResultSerializer
 
 # Create your views here.
 def index(request):
@@ -50,6 +51,7 @@ def document(request, document_id):
             yes += 1
         elif (results.type == Result.NO):
             no += 1
+    results = ResultSerializer(results)
     return render(request, 'index/document.html', {'document': document, 'results':results, 'yes': yes, 'no': no, 'comments': comments})
 
 @login_required(login_url='/auth/')
