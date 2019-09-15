@@ -9,7 +9,7 @@ class DocumentSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name']
+        fields = ['id', 'first_name', 'last_name']
 
 class CommentSerializer(serializers.Serializer):
     user = UserSerializer()
@@ -17,7 +17,8 @@ class CommentSerializer(serializers.Serializer):
     date = serializers.DateTimeField()
 
 
-class ResultSerializer(serializers.Serializer):
+class ResultSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-    result = serializers.IntegerField()
-    
+    class Meta:
+        model = Result
+        fields = '__all__'

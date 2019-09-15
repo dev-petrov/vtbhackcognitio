@@ -1,150 +1,171 @@
 {% extends 'base.html' %}
 {% block title%} Chat {% endblock %}
 {% block content %}
-	<main>
-		<div class="jumbotron">	
-			<div class="container">
-				<div class="row">
-					<div class="col-7">
-						<h1>Документы</h1>
-					</div>	
-					<div class="col-5">
-						<div class="d-flex flex-column flex-sm-row justify-content-end">
-							<button type="button" class="btn btn-sm btn-outline-dark mx-2 my-1" data-toggle="modal" data-target="#mModal">Добавить документ</button>
-							<button type="button" class="btn btn-sm btn-outline-dark mx-2 my-1">Выйти</button>
-						</div>
-					</div>
-				</div>		
-				
-			</div>
-		</div>
+<main>
+	<div class="jumbotron">
 		<div class="container">
-			<div class="container">
-			<nav>
-  				<div class="nav nav-tabs" id="nav-tab" role="tablist" style="width: 300px">
- 					 <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">На рассмотрении</a>
- 					 <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile"	aria-selected="false">Завершенные</a>
-  				</div>
-			</nav>
+			<div class="row">
+				<div class="col-7">
+					<h1>Документы</h1>
+				</div>
+				<div class="col-5">
+					<div class="d-flex flex-column flex-sm-row justify-content-end">
+						{% if user.is_staff%}
+						<button type="button" class="btn btn-sm btn-outline-dark mx-2 my-1" data-toggle="modal"
+							data-target="#mModal">Добавить документ</button>
+						{% endif %}
+						<a href='/logout/' class="btn btn-sm btn-outline-dark mx-2 my-1">Выйти</a>
+					</div>
+				</div>
 			</div>
-			<div class="tab-content" id="nav-tabContent">
-				<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">	
-					<ul class="list-group padding" >
-						<div class="container">
-							<div class="row">	
-								<div class="col-sm-7" >	
-									<li class="list-group-item">Cras justo odio</li>
-								</div>
-								<div class="col-sm-5">
-									<li class="list-group-item">Cras justo odio</li>
-								</div>
+
+		</div>
+	</div>
+	<div class="container">
+		<div class="container">
+			<nav>
+				<div class="nav nav-tabs" id="nav-tab" role="tablist" style="width: 300px">
+					<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
+						aria-controls="nav-home" aria-selected="true">На рассмотрении</a>
+					<a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab"
+						aria-controls="nav-profile" aria-selected="false">Завершенные</a>
+				</div>
+			</nav>
+		</div>
+		<div class="tab-content" id="nav-tabContent">
+			<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+				<ul class="list-group padding">
+					<div class="container">
+						{% if documents %}
+						{% for d in documents %}
+						<div class="row">
+							<div class="col-sm-7">
+								<li class="list-group-item"><a href='/docs/{{ d.id}}'>{{ d.title }}</a></li>
 							</div>
-							<div class="row padding">	
-								<div class="col-sm-7" >	
-									<li class="list-group-item">Cras justo odio</li>
-								</div>
-								<div class="col-sm-5">
-									<li class="list-group-item">Cras justo odio</li>
-								</div>					
+							<div class="col-sm-5">
+								<li class="list-group-item">Рассмотреть до {{d.end_date}}</li>
 							</div>
 						</div>
-					</ul>
-				</div>
-				<div class="tab-pane fade " id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">	
-					<div class="container">
-						
+						{% endfor %}
+						{%else%}
+						<div class="row">
+							<div class="col-12">
+								<li class="list-group-item">У вас нет документов на рассмотрение</li>
+							</div>
+						</div>
+						{%endif%}
 					</div>
-					<form class="padding">
-						<div class="container">
-							<div class="row">
-								<div class="col-sm-8">
-									<div class="container">
-										<div class="row">
-											<div class="col-sm-7">
-												<div class="input-group mb-3">
-													<div class="input-group-prepend">
-														<span class="input-group-text" id="basic-addon1"></span>
-													</div>
-													<input type="text" class="form-control" placeholder="Название" aria-label="			Search" 	aria-describedby="basic-addon1">
+				</ul>
+			</div>
+			<div class="tab-pane fade " id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+				<div class="container">
+
+				</div>
+				<form class="padding">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-8">
+								<div class="container">
+									<div class="row">
+										<div class="col-sm-10">
+											<div class="input-group mb-3">
+												<div class="input-group-prepend">
+													<span class="input-group-text" id="basic-addon1"></span>
 												</div>
-											</div>
-											<div class="col-sm-5">
-												<div class="input-group mb-3">
-													<div class="input-group-prepend">
-														<span class="input-group-text" id="basic-addon1"></span>
-													</div>
-													<input type="date" class="form-control" placeholder="Дата" aria-label="<Search>			</Search>" 	aria-describedby="basic-addon1">
-												</div>
+												<input type="text" class="form-control" placeholder="Название"
+													aria-label="Search" aria-describedby="basic-addon1">
 											</div>
 										</div>
+										<!--<div class="col-sm-5">
+											<div class="input-group mb-3">
+												<div class="input-group-prepend">
+													<span class="input-group-text" id="basic-addon1"></span>
+												</div>
+												<input type="date" class="form-control" placeholder="Дата"
+													 aria-describedby="basic-addon1">
+											</div>
+										</div>-->
 									</div>
 								</div>
-								<div class="col-sm-4">
-									<button type="button" class="btn btn-primary btn-block">Поиск</button>
-								</div>
+							</div>
+							<div class="col-sm-4">
+								<button type="button" class="btn btn-primary btn-block">Поиск</button>
 							</div>
 						</div>
-					</form>
-					<ul class="list-group padding" >
-						<div class="container">
-							<div class="row">	
-								<div class="col-12" >	
-									<li class="list-group-item">Cras justo odio</li>
-									<li class="list-group-item padding">Cras justo odio</li>
-								</div>				
+					</div>
+				</form>
+				<ul class="list-group padding">
+					<div class="container">
+						<div class="row">
+							<div class="col-12">
+								{%if prev_documents %}
+								{% for p in prev_documents %}
+								<li class="list-group-item"><a href='/document/{{ p.id}}'>{{p.title}}</a></li>
+								{% endfor %}
+								{%else%}
+								<li class="list-group-item">Нет завершенных голосований</li>
+								{% endif %}
 							</div>
 						</div>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</main>
-	<div class="modal fade" id="mModal" >
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="mLabel">Добавление документа</h5>
-					<button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				</div>
-				<div class="modal-body">
-					<form>
-						<div class="form-group input-group">
-							<div class="input-group-prepend">
-							    <span class="input-group-text">Название</span>
-							</div>
-				   	    	<input class="form-control" placeholder="Название документа" type="text" required>
-				   		</div>
-				   	 	<div class="form-group input-group">
-							<div class="form-group">
-  								<label for="FormControlFile1">Основной файл</label>
-  								<input type="file" class="form-control-file" id="FormControlFile1" required>
-  							</div>
-  							<div class="form-group">
-  								<label for="FormControlFile2">Дополнительные файлы</label>
-  								<input type="file" class="form-control-file" id="FormControlFile2">
-  							</div>
-				   		</div>
-				   		<ul class="pills">
-							<li><div class="container">Элемент списка <button class="close" type="button" aria-label="Close"><span aria-hidden="true">&times;</span></button></div></li>
-							<li><div class="container">Элемент списка <button class="close" type="button" aria-label="Close"><span aria-hidden="true">&times;</span></button></div></li>
-						</ul>
-				   		<div class="form-group input-group">
-							<div class="input-group-prepend">
-							    <span class="input-group-text">Окончание</span>
-							</div>
-				   	    	<input class="form-control" type="datetime-local" id="date" required>
-				   		</div>
-				   		<div class="form-group input-group">
-							<div class="input-group-prepend">
-							    <span class="input-group-text">Пользователи</span>
-							</div>
-				   	    	<input class="form-control" type="text" id="users" required>
-				   		</div>
-				   		<button type="submit" class="btn btn-primary btn-block"> Добавить </button>
-					</form>
-				</div>
-				<div class="modal-footer"></div>
+					</div>
+				</ul>
 			</div>
 		</div>
 	</div>
+</main>
+<div class="modal fade" id="mModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="mLabel">Добавление документа</h5>
+				<button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+						aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Название</span>
+						</div>
+						<input class="form-control" placeholder="Название документа" type="text" required>
+					</div>
+					<div class="form-group input-group">
+						<div class="form-group">
+							<label for="FormControlFile1">Основной файл</label>
+							<input type="file" class="form-control-file" id="FormControlFile1" required>
+						</div>
+						<div class="form-group">
+							<label for="FormControlFile2">Дополнительные файлы</label>
+							<input type="file" class="form-control-file" id="FormControlFile2">
+						</div>
+					</div>
+					<ul class="pills">
+						<li>
+							<div class="container">Элемент списка <button class="close" type="button"
+									aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
+						</li>
+						<li>
+							<div class="container">Элемент списка <button class="close" type="button"
+									aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
+						</li>
+					</ul>
+					<div class="form-group input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Окончание</span>
+						</div>
+						<input class="form-control" type="datetime-local" id="date" required>
+					</div>
+					<div class="form-group input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Пользователи</span>
+						</div>
+						<input class="form-control" type="text" id="users" required>
+					</div>
+					<button type="submit" class="btn btn-primary btn-block"> Добавить </button>
+				</form>
+			</div>
+			<div class="modal-footer"></div>
+		</div>
+	</div>
+</div>
 {% endblock %}

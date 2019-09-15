@@ -28,12 +28,14 @@ SECRET_KEY = 'qx10r1_lgjoph2r3bqbg=e+ba=58cg87)!j%xc%7=)q-z=dylu'
 DEBUG = True
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['100.90.7.107', '127.0.0.1', '192.168.43.201']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    'index.apps.IndexConfig',
     'api.apps.ApiConfig',
     'rest_framework',
     'django.contrib.admin',
@@ -42,9 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'channels',
-    'index.apps.IndexConfig',
-    
 ]
 
 MIDDLEWARE = [
@@ -118,7 +117,7 @@ AUTH_USER_MODEL = 'index.User'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 

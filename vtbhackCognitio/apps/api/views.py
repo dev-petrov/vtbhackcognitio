@@ -1,20 +1,46 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
+from django.contrib.auth.decorators import login_required
+from index.models import User, Document, Comment
+import json, datetime
+from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 
 
 # Create your views here.
 
-def edid_document(requset, document_id):
-   # asyncio.run(async_comments(requset, doc_id)) asyncio.
-    for i in range(3):
-        time.sleep(1)
-    #data = list(loop.run_until_complete(asyncio.wait([async_comments(requset, document_id)])))#[0].split('=')[1].strip('\'\'>')
-    return HttpResponse('data')
+def edit_document(requset, document_id):
+    pass
+    #return HttpResponse('data')
 
-
-
+@csrf_exempt
+@login_required(login_url = '/auth/')
 def add_comment(request, document_id):
-    pass
-
+    try:
+        document = Document.objects.get(id=document_id)
+    except:
+        return Http404
+    user = request.user
+    print(datetime.datetime.now())
+    comment = document.comment_set.create(user = user, text=request.POST['text'], date = datetime.datetime.now())
+    comment.save()
+    return HttpResponse(json.dumps({
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'text': comment.text,
+        'date': comment.date.strftime('%Y-%m-%d %X')
+    }))
+@csrf_exempt
+@login_required(login_url = '/auth/')
 def add_result(request, document_id):
-    pass
+    try:
+        document = Document.objects.get(id=document_id)
+    except:
+        return Http404
+    user = request.user
+    result = document.result_set.get(user = user, date = datetime.datetime.now())
+    result.upate(result = request.POST['result'])
+    return HttpResponse(json.dumps({
+        'result': comment.text,
+        'date': comment.date.strftime('%Y-%m-%d %X')
+    }))

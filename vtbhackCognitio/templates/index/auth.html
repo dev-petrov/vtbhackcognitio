@@ -5,13 +5,14 @@
 	<div class="container-login">
 		<div class="wrap-login card">
 			<div class="card-body">
-				<form class="login-form">
+				<form class="login-form" method='POST' action='/login/'>
+					{% csrf_token %}
 					<span class="login-form-title">
 						Авторизация
 					</span>
 					<div class="wrap-input  padding">
-						<span class="label-input"><b>Эл.почта или Логин</b></span>
-						<input class="input" type="email" name="Email" placeholder="Введите адрес электронной почты">
+						<span class="label-input"><b>Логин</b></span>
+						<input class="input" type="email" name="email" placeholder="Введите адрес электронной почты">
 						<span class="focus-input" data-symbol="&#xf206;"></span>
 					</div>
 					<div class="wrap-input  padding">
@@ -22,7 +23,7 @@
 					<div class="container-login-form-btn padding">
 						<div class="wrap-login-form-btn">
 							<div class="login-form-bgbtn"></div>
-							<button class="login-form-btn">
+							<button type='submit' class="login-form-btn">
 								Войти
 							</button>
 						</div>

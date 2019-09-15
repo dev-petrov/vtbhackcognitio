@@ -66,7 +66,7 @@ class Result(models.Model):
         (NO, 'No'),
         (NO_RESULT, 'No result')
     ]
-    doc_id = models.ForeignKey(Document, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    doc = models.ForeignKey(Document, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     result = models.IntegerField('Result', choices=RESULTS, default=NO_RESULT)
     date = models.DateTimeField('Date of update', auto_now_add=True)

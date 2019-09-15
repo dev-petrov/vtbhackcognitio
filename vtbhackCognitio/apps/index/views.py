@@ -4,7 +4,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponse, Http404
 import json
 from .models import User, Document, Result, Comment
-from .serializers import ResultSerializer
+from .serializers import ResultSerializer, CommentSerializer
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 def index(request):
@@ -13,26 +14,26 @@ def index(request):
         return redirect('/docs/')
     else:
         return redirect('/auth/')
-
-def login(request):
+@csrf_exempt
+def login_user(request):
     email = request.POST['email']
     password = request.POST['password']
     user = authenticate(email = email, password = password)
-    if (user != None):
+    if (user is not None):
         login(request, user)
-        return HttpResponse(json.dumps({
-            'type': 'success'
-        }))
+        res = redirect('/docs/')
+        res.set_cookie('user', user.id)
+        return res
     else:
-        return HttpResponse(json.dumps({
-            'type':'invalid'
-        }))
+        return redirect('/auth/')
 
 @login_required(login_url='/auth/')
 def docs(request):
     user = request.user
-    documents = user.document_set.all()
-    return render(request, 'index/doc_list.html', {'documents':documents})
+    documents = user.document_set.filter(is_active = True)
+    print(documents)
+    prev_documents = user.document_set.filter(is_active = False)
+    return render(request, 'index/doc_list.html', {'documents':documents, 'prev_documents': prev_documents})
 
 
 @login_required(login_url='/auth/')
@@ -42,20 +43,22 @@ def document(request, document_id):
         document = user.document_set.get(id = document_id)
     except:
         return redirect('/permission_denied/')
-    results = document.result_set.all()
     yes = 0
     no = 0
     comments = document.comment_set.all()
+    results = document.result_set.all()
     for i in results:
-        if (results.type == Result.YES):
+        if (i.result == Result.YES):
             yes += 1
-        elif (results.type == Result.NO):
+        elif (i.result == Result.NO):
             no += 1
-    results = ResultSerializer(results)
-    return render(request, 'index/document.html', {'document': document, 'results':results, 'yes': yes, 'no': no, 'comments': comments})
-
+    user_point = results.get(user = user) 
+    results = results.exclude(user = user)
+    results = ResultSerializer(results, many=True)
+    comments = CommentSerializer(comments, many=True)
+    return render(request, 'index/document.html', {'document': document, 'results':results.data, 'yes': yes, 'no': no, 'comments': comments.data, 'user_point' : user_point})
 @login_required(login_url='/auth/')
-def logout(request):
+def logout_user(request):
     logout(request)
     return redirect('/auth/')
 

@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
-{% block title%} {% document.title %} {% endblock %}
+{% block title%} {{ document.title }} {% endblock %}
 {% block content %}
 <main>
+	<div class="d-none" id='document_id'>{{ document.id }}</div>
 	<div class="jumbotron">
 		<div class="container">
-			<h1>{% document.title %}</h1>
+			<h1>{{ document.title }}</h1>
 		</div>
 	</div>
 	<div class="container">
@@ -12,70 +13,88 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-6 padding">
-						<li class="list-group-item">{% document.text %}</li>
+						<li class="list-group-item">{{ document.text }}</li>
 					</div>
 					<div class="col-lg-6 padding">
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="list-group-item">
+									<div class="d-flex flex-row justify-content-between">
+										<div>
+
+											<p class="text-success">За: {{ yes }}</p>
+										</div>
+										<div>
+											<p class="text-danger">Против: {{ no }}</p>
+										</div>
+										<div>
+											<p class="text-danger">Проголосовать до {{ document.end_date }}</p>
+										</div>
+
+									</div>
+								</div>
+								<div class="list-group-item">
+									<button class="btn btn-success">За</button>
+									<button class="btn btn-danger">Против</button>
+									
+											{% if user_point.result == 1 %}
+											<p class="text-success">Вы проголосовали за</p>
+											{% elif user_point.result == 0 %}
+											<p class="text-danger">Вы проглосовали против</p>
+											{% else %}
+											<p class="text-warning">Вы ещё не проголосовали</p>
+											{% endif %}
+								</div>
+								{% for r in results %}
+								<div class="list-group-item">
 									<div class="d-flex flex-row">
 										<div>
 
-											<p class="text-success">За: {% yes %}</p>
+											<p class="">{{ r.user.first_name}} {{ r.user.last_name }}</p>
 										</div>
 										<div>
-											<p class="text-danger">Против: {% no %}</p>
+											{% if r.result == 1 %}
+											<p class="text-success">За</p>
+											{% elif r.result == 0 %}
+											<p class="text-danger">Против</p>
+											{% else %}
+											<p class="text-warning">Не проголосовал</p>
+											{% endif %}
 										</div>
 									</div>
-									<div class="list-group-item">
-										<button class="btn btn-success">За</button>
-										<button class="btn btn-danger">Против</button>
-									</div>
-									{% for r in results %}
-									<div class="d-flex flex-row">
-											<div>
-	
-												<p class="">{% r.user.first_name r.user.last_name %}</p>
-											</div>
-											<div>
-												{% if r.result == 1 %}
-												<p class="text-success">За</p>
-												{% else if r.result == 0 %}
-												<p class="text-danger">Против</p>
-												{% else %}
-												<p class="text-warning">Не проголосовал</p>
-												{% endif %}
-											</div>
-										</div>
 								</div>
+								{% endfor %}
 							</div>
 							<div class="col-sm-12">
 								<div class="list-group-item padding">
 									<div class="form-group">
-										<label>Чатик</label>
+										<label>Обсуждение</label>
 										<div id="textarea" class="card">
 											<div class="container pt-1" id="chat">
+												{% for c in comments %}
 												<div class="row">
 													<div class="col-3 name">
-															Кирилл
+														{{ c.user.first_name}} {{c.user.last_name }}
 													</div>
 													<div class="col-5 comment">
-															Гавно не тонет
+														{{ c.text }}
 													</div>
 													<div class="col-4 date">
-															14.06.2019
+														{{ c.date }}
 													</div>
 												</div>
+												{% endfor %}
 											</div>
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-12">
 											<div class="form-group input-group">
-												<input class="form-control" placeholder="Оставьте комментарий"
-													type="text" required>
+												<input id='message' class="form-control"
+													placeholder="Оставьте комментарий" type="text" required>
 												<div class="input-group-append">
-													<button type="button" class="btn btn-sm btn-primary btn-block"><span
+													<button type="button" onclick='post_message()'
+														class="btn btn-sm btn-primary btn-block"><span
 															class="carousel-control-next-icon"
 															style="height:17px"></span></button>
 												</div>
