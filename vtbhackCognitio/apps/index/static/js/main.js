@@ -6,20 +6,50 @@ if (document.querySelector('#document_id')) {
 
 function yes() {
     var req = new XMLHttpRequest();
-    req.open('POST', '');
-    req.onload = () => {
 
+    req.open('POST', '/api/add_result/' + doc_id);
+    req.onload = () => {
+        console.log(req.response)
+        var res = JSON.parse(req.response);
+        console.log(res["prev"])
+        document.querySelector('#user_point').innerHTML = `<p class='text-success'>Вы проголосвали за</p>`
+        if (res["prev"] == 0){
+            console.log('prev null')
+            var yes = document.querySelector('#yes')
+            var numYes = parseInt(yes.textContent)
+            var no = document.querySelector('#no')
+            var numNo = parseInt(no.textContent)
+            yes.textContent = numYes + 1
+            no.textContent = numNo - 1
+        }
     }
-    req.send('stuff');
+    var data = new FormData();
+    data.append('result', 1);
+    data.append('user', getCookie('user'));
+    req.send(data);
 }
 
 function no() {
     var req = new XMLHttpRequest();
-    req.open('POST', '');
-    req.onload = () => {
 
+    req.open('POST', '/api/add_result/' + doc_id);
+    req.onload = () => {
+        console.log(req.response)
+        var response = JSON.parse(req.response);
+        document.querySelector('#user_point').innerHTML = `<p class='text-danger'>Вы проголосвали против</p>`
+        if (response['prev'] === 1){
+            var yes = document.querySelector('#yes')
+            var numYes = parseInt(yes.textContent)
+            var no = document.querySelector('#no')
+            var numNo = parseInt(no.textContent)
+            yes.textContent = numYes - 1
+            no.textContent = numNo + 1
+        }
     }
-    req.send('stuff');
+    var data = new FormData();
+    data.append('result', 0);
+    data.append('user', getCookie('user'));
+    req.send(data);
 }
 ///////////////////////////////////////////////////////////////////////////
 
@@ -71,6 +101,7 @@ if (document.querySelector('#textarea')) {
         behavior: "smooth"
     });
     get_messeges();
+    get_results();
 }
 
 function post_message() {
@@ -176,6 +207,69 @@ function get_messeges() {
                 //tag.appendChild(cont);
                 //var element = document.getElementById("div1");
                 least.appendChild(tag);
+                
+            }
+        }
+    }
+}
+function get_results() {
+    //console.log('some gay shit');
+    //var data = new FormData(document.querySelector('#f'));
+    date = new Date();
+    var socket = new WebSocket("ws://" + serv_ip + "/api/get_results/");
+    socket.onopen = function () {
+        json = {
+            'date':date.getFullYear() + '-'
+            + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' +
+            date.getMinutes() + ':' + date.getSeconds(),
+            'doc_id': doc_id,
+            'user' : getCookie('user')
+        }
+        json = JSON.stringify(json)
+        console.log(json)
+        socket.send(json);
+    };
+    var ans;
+    socket.onmessage = (e) => {
+        ans = JSON.parse(e.data);
+        console.log(e.data)
+        date = new Date()
+        json = {
+            'date':date.getFullYear() + '-'
+            + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' +
+            date.getMinutes() + ':' + date.getSeconds(),
+            'doc_id': doc_id,
+            'user' : getCookie('user')
+        }
+        json = JSON.stringify(json)
+        console.log(json)
+        socket.send(json);
+
+        if (ans['type'] === 'nothing new') {
+            return
+        } else {
+            var results = ans['results'];
+            for (var i = 0; i < results.length; i++) {
+                console.log(results)
+                var new_res = document.querySelector('#user' + results[i]['user']['id']);
+                if (results[i]['result'] == 0){
+                    new_res.innerHTML = `<p class='text-danger'>Против</p>`;
+                    var yes = document.querySelector('#yes');
+                    var numYes = parseInt(yes.textContent);
+                    var no = document.querySelector('#no');
+                    var numNo = parseInt(no.textContent);
+                    yes.textContent = numYes - 1;
+                    no.textContent = numNo + 1;
+                } else {
+                    new_res.innerHTML = `<p class='text-success'>За</p>`;
+                    var yes = document.querySelector('#yes');
+                    var numYes = parseInt(yes.textContent);
+                    var no = document.querySelector('#no');
+                    var numNo = parseInt(no.textContent);
+                    yes.textContent = numYes + 1;
+                    no.textContent = numNo - 1;
+                }
+
                 
             }
         }

@@ -5,7 +5,20 @@
 	<div class="d-none" id='document_id'>{{ document.id }}</div>
 	<div class="jumbotron">
 		<div class="container">
-			<h1>{{ document.title }}</h1>
+			<div class="row">
+				<div class="col-7">
+					<h1>{{ document.title }}</h1>
+				</div>
+				<div class="col-5">
+					<div class="d-flex flex-column flex-sm-row justify-content-end">
+						{% if user.is_staff%}
+						<button type="button" class="btn btn-sm btn-outline-dark mx-2 my-1" data-toggle="modal"
+							data-target="#mModal">Добавить документ</button>
+						{% endif %}
+						<a href='/logout/' class="btn btn-sm btn-outline-dark mx-2 my-1">Выйти</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="container">
@@ -13,7 +26,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-6 padding">
-						<li class="list-group-item">{{ document.text }}</li>
+						<li class="list-group-item"><pre>{{ document.text }}</pre></li>
 					</div>
 					<div class="col-lg-6 padding">
 						<div class="row">
@@ -22,10 +35,10 @@
 									<div class="d-flex flex-row justify-content-between">
 										<div>
 
-											<p class="text-success">За: {{ yes }}</p>
+											<p class="text-success">За: <span id='yes'>{{ yes }}</span></p>
 										</div>
 										<div>
-											<p class="text-danger">Против: {{ no }}</p>
+											<p class="text-danger">Против: <span id='no'>{{ no }}</span></p>
 										</div>
 										<div>
 											<p class="text-danger">Проголосовать до {{ document.end_date }}</p>
@@ -34,25 +47,26 @@
 									</div>
 								</div>
 								<div class="list-group-item">
-									<button class="btn btn-success">За</button>
-									<button class="btn btn-danger">Против</button>
-									
-											{% if user_point.result == 1 %}
-											<p class="text-success">Вы проголосовали за</p>
-											{% elif user_point.result == 0 %}
-											<p class="text-danger">Вы проглосовали против</p>
-											{% else %}
-											<p class="text-warning">Вы ещё не проголосовали</p>
-											{% endif %}
+									<button class="btn btn-success" onclick="yes()">За</button>
+									<button class="btn btn-danger" onclick="no()">Против</button>
+									<div id='user_point'>
+									{% if user_point.result == 1 %}
+									<p class="text-success">Вы проголосовали за</p>
+									{% elif user_point.result == 0 %}
+									<p class="text-danger">Вы проглосовали против</p>
+									{% else %}
+									<p class="text-warning">Вы ещё не проголосовали</p>
+									{% endif %}
+									</div>
 								</div>
 								{% for r in results %}
 								<div class="list-group-item">
 									<div class="d-flex flex-row">
 										<div>
 
-											<p class="">{{ r.user.first_name}} {{ r.user.last_name }}</p>
+											<p class="mr-4">{{ r.user.first_name}} {{ r.user.last_name }}</p>
 										</div>
-										<div>
+										<div id='user{{r.user.id}}'>
 											{% if r.result == 1 %}
 											<p class="text-success">За</p>
 											{% elif r.result == 0 %}

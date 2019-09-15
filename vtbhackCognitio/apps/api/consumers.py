@@ -81,14 +81,14 @@ class ResultConsumer(AsyncWebsocketConsumer):
         @database_sync_to_async
         def search_for_new_comments(self, date):
             return Comment.objects.filter(date__gt=date)
-        for i in range(10):
+        for i in range(5):
             results = Result.objects.filter(doc_id = int(data['doc_id']), date__gt=data['date']).exclude(user = data['user'])
-            await asyncio.sleep(1)
+            await asyncio.sleep(2)
             if (results.count() != 0):
                 break
         #comments = await get_new_comments(self, date = '2000-09-25 8:30:34')
         #print(comments)
-        if (comments.count() != 0):
+        if (results.count() != 0):
             data = {
                 'type': 'found',
                 'results':ResultSerializer(results, many = True).data

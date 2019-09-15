@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
-from index.models import User, Document, Comment
+from index.models import User, Document, Comment, Result
 import json, datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
@@ -38,9 +38,14 @@ def add_result(request, document_id):
     except:
         return Http404
     user = request.user
-    result = document.result_set.get(user = user, date = datetime.datetime.now())
-    result.upate(result = request.POST['result'])
+    res = document.result_set.get(user = user)
+    prev = res.result
+    print(prev)
+    res.result = int(request.POST['result'])
+    res.date = datetime.datetime.now()
+    res.save()
     return HttpResponse(json.dumps({
-        'result': comment.text,
-        'date': comment.date.strftime('%Y-%m-%d %X')
+        'result': res.result,
+        'date': res.date.strftime('%Y-%m-%d %X'),
+        'prev' : prev
     }))
